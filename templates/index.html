@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>OCR Masivo - PDF Processor</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="mb-4 text-center">OCR Masivo de PDFs</h1>
+
+    <form id="ocrForm" method="post" action="/start" enctype="multipart/form-data">
+      <!-- Carpeta de entrada -->
+      <div class="mb-3">
+        <label for="inputFolder" class="form-label">📁 Selecciona carpeta de entrada (PDFs)</label>
+        <input type="file" id="inputFolder" webkitdirectory directory multiple class="form-control" required>
+        <input type="hidden" name="input_folder" id="inputFolderPath">
+      </div>
+
+      <!-- Carpeta de salida -->
+      <div class="mb-3">
+        <label for="outputFolder" class="form-label">📂 Selecciona carpeta de salida</label>
+        <input type="file" id="outputFolder" webkitdirectory directory multiple class="form-control" required>
+        <input type="hidden" name="output_folder" id="outputFolderPath">
+      </div>
+
+      <!-- Botón para iniciar -->
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary btn-lg">🚀 Iniciar Conversión</button>
+      </div>
+    </form>
+
+    <!-- Área de logs -->
+    <div class="mt-5">
+      <h4>📋 Estado del Proceso</h4>
+      <pre id="logOutput" class="log-area">Esperando acción...</pre>
+    </div>
+  </div>
+
+  <script>
+    // Obtiene y guarda el nombre de la carpeta seleccionada
+    document.getElementById('inputFolder').addEventListener('change', function () {
+      if (this.files.length > 0) {
+        const folderPath = this.files[0].webkitRelativePath.split('/')[0];
+        document.getElementById('inputFolderPath').value = folderPath;
+      }
+    });
+
+    document.getElementById('outputFolder').addEventListener('change', function () {
+      if (this.files.length > 0) {
+        const folderPath = this.files[0].webkitRelativePath.split('/')[0];
+        document.getElementById('outputFolderPath').value = folderPath;
+      }
+    });
+
+    // Autoactualiza los logs cada 3s
+    setInterval(() => {
+      fetch('/logs')
+        .then(res => res.text())
+        .then(data => document.getElementById('logOutput').textContent = data)
+        .catch(() => document.getElementById('logOutput').textContent = "No se pudo cargar log.");
+    }, 3000);
+  </script>
+</body>
+</html>

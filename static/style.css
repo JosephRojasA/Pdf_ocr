@@ -1,0 +1,19 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+h1 {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.log-area {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    height: 250px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    border-radius: 0.5rem;
+}
