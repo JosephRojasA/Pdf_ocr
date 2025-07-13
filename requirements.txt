@@ -1,0 +1,8 @@
+flask
+pytesseract
+pdf2image
+pillow
+opencv-python
+numpy
+pikepdf
+fpdf

@@ -1,9 +1,14 @@
 import os
 import pytesseract
+
+# Ruta al ejecutable de Tesseract (ajusta si es necesario)
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+
 from pdf2image import convert_from_path
 from PIL import Image
 import cv2
 import numpy as np
+from fpdf import FPDF
 from ocr_utils.logger import log_info, log_error
 
 # -------------------------------
@@ -23,19 +28,12 @@ def convert_pdf_to_images(pdf_path, dpi=300):
 # -------------------------------
 def preprocess_image(pil_image):
     try:
-        # Convertir a escala de grises
-        img = np.array(pil_image.convert('L'))
-
-        # Binarizar (umbral)
+        img = np.array(pil_image.convert('L'))  # escala de grises
         _, img_bin = cv2.threshold(img, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
 
-        # Deskew (alinear)
         coords = np.column_stack(np.where(img_bin < 255))
         angle = cv2.minAreaRect(coords)[-1]
-        if angle < -45:
-            angle = -(90 + angle)
-        else:
-            angle = -angle
+        angle = -(90 + angle) if angle < -45 else -angle
 
         (h, w) = img_bin.shape[:2]
         center = (w // 2, h // 2)
@@ -52,11 +50,13 @@ def preprocess_image(pil_image):
 # -------------------------------
 def perform_ocr(image):
     try:
-        text = pytesseract.image_to_string(image, lang='spa')  # Cambiar idioma si es necesario
+        text = pytesseract.image_to_string(image, lang='spa')
+        print("🧪 Texto OCR extraído:\n", text)  # DEBUG
         return text
     except Exception as e:
         log_error(f"❌ Error en OCR: {str(e)}")
         return ""
+
 
 # -------------------------------
 # Guarda el texto extraído en archivo .txt
@@ -68,6 +68,29 @@ def save_ocr_text(text, output_path):
         log_info(f"📝 Texto guardado en {output_path}")
     except Exception as e:
         log_error(f"❌ Error al guardar texto OCR: {str(e)}")
+
+# -------------------------------
+# Guarda el texto extraído como PDF
+# -------------------------------
+
+
+def save_text_as_pdf(text, output_path):
+    try:
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_auto_page_break(auto=True, margin=15)
+        pdf.set_font("Arial", size=12)
+
+        # Reemplazar caracteres incompatibles
+        clean_text = text.encode('latin-1', errors='replace').decode('latin-1')
+
+        for line in clean_text.split('\n'):
+            pdf.multi_cell(0, 10, line)
+
+        pdf.output(output_path)
+        log_info(f"📄 PDF de texto guardado en: {output_path}")
+    except Exception as e:
+        log_error(f"❌ Error al guardar PDF de texto: {str(e)}")
 
 # -------------------------------
 # Proceso completo: PDF a texto por página
@@ -84,3 +107,6 @@ def ocr_pdf_to_text(pdf_path, output_folder):
 
         output_txt = os.path.join(output_folder, f"{base_name}_pagina_{page_number}.txt")
         save_ocr_text(text, output_txt)
+
+        output_pdf = os.path.join(output_folder, f"{base_name}_pagina_{page_number}.pdf")
+        save_text_as_pdf(text, output_pdf)

@@ -38,7 +38,9 @@ def insert_metadata_to_pdf(pdf_path, metadata: dict):
             pdf.metadata['Author'] = metadata.get('Author', 'OCR_App')
             pdf.metadata['Producer'] = metadata.get('Producer', 'OCR_App')
             pdf.metadata['Subject'] = metadata.get('Subject', '')
-            pdf.metadata['CustomID'] = metadata.get('CustomID', f"ID-{int(datetime.now().timestamp())}")
+            # Los campos personalizados se prefijan con / en PDF
+            custom_id = metadata.get('CustomID', f"ID-{int(datetime.now().timestamp())}")
+            pdf.docinfo["/CustomID"] = custom_id
             pdf.save(pdf_path)
         log_info(f"🧾 Metadatos insertados en: {os.path.basename(pdf_path)}")
     except Exception as e:

@@ -10,19 +10,17 @@
   <div class="container mt-5">
     <h1 class="mb-4 text-center">OCR Masivo de PDFs</h1>
 
-    <form id="ocrForm" method="post" action="/start" enctype="multipart/form-data">
+    <form id="ocrForm" method="post" action="/start">
       <!-- Carpeta de entrada -->
       <div class="mb-3">
-        <label for="inputFolder" class="form-label">📁 Selecciona carpeta de entrada (PDFs)</label>
-        <input type="file" id="inputFolder" webkitdirectory directory multiple class="form-control" required>
-        <input type="hidden" name="input_folder" id="inputFolderPath">
+        <label for="input_folder" class="form-label">📁 Ruta de carpeta de entrada (PDFs)</label>
+        <input type="text" name="input_folder" id="input_folder" class="form-control" placeholder="Ej: D:/PDFsEntrada" required>
       </div>
 
       <!-- Carpeta de salida -->
       <div class="mb-3">
-        <label for="outputFolder" class="form-label">📂 Selecciona carpeta de salida</label>
-        <input type="file" id="outputFolder" webkitdirectory directory multiple class="form-control" required>
-        <input type="hidden" name="output_folder" id="outputFolderPath">
+        <label for="output_folder" class="form-label">📂 Ruta de carpeta de salida</label>
+        <input type="text" name="output_folder" id="output_folder" class="form-control" placeholder="Ej: D:/PDFsProcesados" required>
       </div>
 
       <!-- Botón para iniciar -->
@@ -39,21 +37,6 @@
   </div>
 
   <script>
-    // Obtiene y guarda el nombre de la carpeta seleccionada
-    document.getElementById('inputFolder').addEventListener('change', function () {
-      if (this.files.length > 0) {
-        const folderPath = this.files[0].webkitRelativePath.split('/')[0];
-        document.getElementById('inputFolderPath').value = folderPath;
-      }
-    });
-
-    document.getElementById('outputFolder').addEventListener('change', function () {
-      if (this.files.length > 0) {
-        const folderPath = this.files[0].webkitRelativePath.split('/')[0];
-        document.getElementById('outputFolderPath').value = folderPath;
-      }
-    });
-
     // Autoactualiza los logs cada 3s
     setInterval(() => {
       fetch('/logs')
