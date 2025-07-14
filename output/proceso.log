@@ -1,67 +1,29 @@
-[2025-07-14 14:47:06] Log inicializado
-[2025-07-14 14:47:07] INFO: Iniciando procesamiento OCR en: C:\Users\USUARIO 283\Documents\joseph\prueba\entrada
-[2025-07-14 14:47:07] INFO: Guardando resultados en: C:\Users\USUARIO 283\Documents\joseph\prueba\salida
-[2025-07-14 14:47:07] INFO: Iniciando OCR para: Captura.pdf
-[2025-07-14 14:47:07] INFO: OCR del archivo: C:\Users\USUARIO 283\Documents\joseph\prueba\entrada\Captura.pdf
-[2025-07-14 14:47:07] INFO: PDF convertido en 1 imágenes
-[2025-07-14 14:47:22] INFO: Iniciando procesamiento OCR en: C:\Users\USUARIO 283\Documents\joseph\prueba\entrada
-[2025-07-14 14:47:22] INFO: Guardando resultados en: C:\Users\USUARIO 283\Documents\joseph\prueba\salida
-[2025-07-14 14:47:22] INFO: Iniciando OCR para: Captura.pdf
-[2025-07-14 14:47:22] INFO: OCR del archivo: C:\Users\USUARIO 283\Documents\joseph\prueba\entrada\Captura.pdf
-[2025-07-14 14:47:22] INFO: PDF convertido en 1 imágenes
-[2025-07-14 14:47:55] ERROR: OCR fallido o sin texto útil en página 1 de Captura
-[2025-07-14 14:47:55] ERROR: OCR fallido o sin texto: Captura.pdf
-[2025-07-14 14:47:55] ERROR: OCR fallido o sin texto: Captura.pdf
-[2025-07-14 14:47:55] INFO: Iniciando OCR para: EXP-1.pdf
-[2025-07-14 14:47:55] INFO: OCR del archivo: C:\Users\USUARIO 283\Documents\joseph\prueba\entrada\EXP-1.pdf
-[2025-07-14 14:48:00] INFO: PDF convertido en 3 imágenes
-[2025-07-14 14:48:19] ERROR: OCR fallido o sin texto útil en página 1 de Captura
-[2025-07-14 14:48:19] ERROR: OCR fallido o sin texto: Captura.pdf
-[2025-07-14 14:48:53] INFO: Texto guardado en C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-1\EXP-1_pagina_1.txt
-[2025-07-14 14:48:53] INFO: PDF de texto guardado en: C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-1\EXP-1_pagina_1_ocr.pdf
-[2025-07-14 14:49:29] INFO: Texto guardado en C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-1\EXP-1_pagina_2.txt
-[2025-07-14 14:49:29] INFO: PDF de texto guardado en: C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-1\EXP-1_pagina_2_ocr.pdf
-[2025-07-14 14:50:10] ERROR: OCR fallido o sin texto útil en página 3 de EXP-1
-[2025-07-14 14:50:10] INFO: Metadatos insertados en: EXP-1_pagina_1.pdf
-[2025-07-14 14:50:10] INFO: Metadatos insertados en: EXP-1_pagina_1_ocr.pdf
-[2025-07-14 14:50:10] INFO: Metadatos insertados en: EXP-1_pagina_2.pdf
-[2025-07-14 14:50:10] INFO: Metadatos insertados en: EXP-1_pagina_2_ocr.pdf
-[2025-07-14 14:50:10] INFO: Metadatos insertados en: EXP-1_pagina_3.pdf
-[2025-07-14 14:50:10] INFO: Procesado correctamente: EXP-1.pdf
-[2025-07-14 14:50:10] INFO: Iniciando OCR para: EXP-2.pdf
-[2025-07-14 14:50:10] INFO: OCR del archivo: C:\Users\USUARIO 283\Documents\joseph\prueba\entrada\EXP-2.pdf
-[2025-07-14 14:50:16] INFO: PDF convertido en 6 imágenes
-[2025-07-14 14:50:59] ERROR: OCR fallido o sin texto útil en página 1 de EXP-2
-[2025-07-14 14:51:33] INFO: Texto guardado en C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-2\EXP-2_pagina_2.txt
-[2025-07-14 14:51:33] INFO: PDF de texto guardado en: C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-2\EXP-2_pagina_2_ocr.pdf
-[2025-07-14 14:52:16] INFO: Texto guardado en C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-2\EXP-2_pagina_3.txt
-[2025-07-14 14:52:16] INFO: PDF de texto guardado en: C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-2\EXP-2_pagina_3_ocr.pdf
-[2025-07-14 14:53:01] INFO: Texto guardado en C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-2\EXP-2_pagina_4.txt
-[2025-07-14 14:53:01] INFO: PDF de texto guardado en: C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-2\EXP-2_pagina_4_ocr.pdf
-[2025-07-14 14:53:53] INFO: Texto guardado en C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-2\EXP-2_pagina_5.txt
-[2025-07-14 14:53:53] INFO: PDF de texto guardado en: C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-2\EXP-2_pagina_5_ocr.pdf
-[2025-07-14 14:54:35] ERROR: OCR fallido o sin texto útil en página 6 de EXP-2
-[2025-07-14 14:54:36] INFO: Metadatos insertados en: EXP-2_pagina_1.pdf
-[2025-07-14 14:54:36] INFO: Metadatos insertados en: EXP-2_pagina_2.pdf
-[2025-07-14 14:54:36] INFO: Metadatos insertados en: EXP-2_pagina_2_ocr.pdf
-[2025-07-14 14:54:36] INFO: Metadatos insertados en: EXP-2_pagina_3.pdf
-[2025-07-14 14:54:36] INFO: Metadatos insertados en: EXP-2_pagina_3_ocr.pdf
-[2025-07-14 14:54:36] INFO: Metadatos insertados en: EXP-2_pagina_4.pdf
-[2025-07-14 14:54:36] INFO: Metadatos insertados en: EXP-2_pagina_4_ocr.pdf
-[2025-07-14 14:54:36] INFO: Metadatos insertados en: EXP-2_pagina_5.pdf
-[2025-07-14 14:54:36] INFO: Metadatos insertados en: EXP-2_pagina_5_ocr.pdf
-[2025-07-14 14:54:36] INFO: Metadatos insertados en: EXP-2_pagina_6.pdf
-[2025-07-14 14:54:36] INFO: Procesado correctamente: EXP-2.pdf
-[2025-07-14 14:54:36] INFO: Iniciando OCR para: EXP-3.pdf
-[2025-07-14 14:54:36] INFO: OCR del archivo: C:\Users\USUARIO 283\Documents\joseph\prueba\entrada\EXP-3.pdf
-[2025-07-14 14:54:38] INFO: PDF convertido en 3 imágenes
-[2025-07-14 14:55:31] INFO: Texto guardado en C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-3\EXP-3_pagina_1.txt
-[2025-07-14 14:55:31] INFO: PDF de texto guardado en: C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-3\EXP-3_pagina_1_ocr.pdf
-[2025-07-14 14:56:10] ERROR: OCR fallido o sin texto útil en página 2 de EXP-3
-[2025-07-14 14:56:57] ERROR: OCR fallido o sin texto útil en página 3 de EXP-3
-[2025-07-14 14:56:57] INFO: Metadatos insertados en: EXP-3_pagina_1.pdf
-[2025-07-14 14:56:57] INFO: Metadatos insertados en: EXP-3_pagina_1_ocr.pdf
-[2025-07-14 14:56:57] INFO: Metadatos insertados en: EXP-3_pagina_2.pdf
-[2025-07-14 14:56:57] INFO: Metadatos insertados en: EXP-3_pagina_3.pdf
-[2025-07-14 14:56:57] INFO: Procesado correctamente: EXP-3.pdf
-[2025-07-14 14:56:57] Tiempo total: 590.84s | Archivos procesados: 3
+[2025-07-14 16:28:41] Log inicializado
+[2025-07-14 16:28:48] INFO: Iniciando procesamiento OCR en: C:\Users\USUARIO 283\Documents\joseph\prueba\entrada
+[2025-07-14 16:28:48] INFO: Guardando resultados en: C:\Users\USUARIO 283\Documents\joseph\prueba\salida
+[2025-07-14 16:28:48] INFO: Iniciando OCR para: EXP-1.pdf
+[2025-07-14 16:28:48] INFO: OCR del archivo: C:\Users\USUARIO 283\Documents\joseph\prueba\entrada\EXP-1.pdf
+[2025-07-14 16:28:50] INFO: PDF convertido en 3 imágenes
+[2025-07-14 16:29:28] INFO: Texto guardado en C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-1\EXP-1_pagina_1.txt
+[2025-07-14 16:29:28] INFO: PDF de texto guardado en: C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-1\EXP-1_pagina_1_texto.pdf
+[2025-07-14 16:29:29] INFO: PDF searchable guardado en: C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-1\EXP-1_pagina_1_searchable.pdf
+[2025-07-14 16:30:07] INFO: Texto guardado en C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-1\EXP-1_pagina_2.txt
+[2025-07-14 16:30:07] INFO: PDF de texto guardado en: C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-1\EXP-1_pagina_2_texto.pdf
+[2025-07-14 16:30:08] INFO: PDF searchable guardado en: C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-1\EXP-1_pagina_2_searchable.pdf
+[2025-07-14 16:30:55] ERROR: OCR fallido o sin texto útil en página 3 de EXP-1
+[2025-07-14 16:30:55] ERROR: Error creando PDF searchable combinado: cannot import name 'create_combined_searchable_pdf' from 'ocr_utils.ocr_pdf_overlay' (C:\Users\USUARIO 283\Documents\joseph\prueba\pruebaPDF\ocr_app\ocr_utils\ocr_pdf_overlay.py)
+[2025-07-14 16:30:55] ERROR: Error insertando metadatos en EXP-1_searchable.pdf: [Errno 2] No such file or directory: 'C:\\Users\\USUARIO 283\\Documents\\joseph\\prueba\\salida\\EXP-1\\EXP-1_searchable.pdf'
+[2025-07-14 16:30:55] INFO: Procesado correctamente: EXP-1.pdf
+[2025-07-14 16:30:55] INFO: Iniciando OCR para: EXP-2.pdf
+[2025-07-14 16:30:55] INFO: OCR del archivo: C:\Users\USUARIO 283\Documents\joseph\prueba\entrada\EXP-2.pdf
+[2025-07-14 16:31:00] INFO: PDF convertido en 6 imágenes
+[2025-07-14 16:31:43] ERROR: OCR fallido o sin texto útil en página 1 de EXP-2
+[2025-07-14 16:32:15] INFO: Texto guardado en C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-2\EXP-2_pagina_2.txt
+[2025-07-14 16:32:15] INFO: PDF de texto guardado en: C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-2\EXP-2_pagina_2_texto.pdf
+[2025-07-14 16:32:17] INFO: PDF searchable guardado en: C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-2\EXP-2_pagina_2_searchable.pdf
+[2025-07-14 16:33:03] INFO: Texto guardado en C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-2\EXP-2_pagina_3.txt
+[2025-07-14 16:33:03] INFO: PDF de texto guardado en: C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-2\EXP-2_pagina_3_texto.pdf
+[2025-07-14 16:33:04] INFO: PDF searchable guardado en: C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-2\EXP-2_pagina_3_searchable.pdf
+[2025-07-14 16:33:48] INFO: Texto guardado en C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-2\EXP-2_pagina_4.txt
+[2025-07-14 16:33:48] INFO: PDF de texto guardado en: C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-2\EXP-2_pagina_4_texto.pdf
+[2025-07-14 16:33:50] INFO: PDF searchable guardado en: C:\Users\USUARIO 283\Documents\joseph\prueba\salida\EXP-2\EXP-2_pagina_4_searchable.pdf

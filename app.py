@@ -4,6 +4,18 @@ import time
 from flask import Flask, render_template, request, redirect
 
 # -------------------------------
+# Utilidad para evitar errores de codificación
+# -------------------------------
+def safe_str(obj):
+    try:
+        return str(obj)
+    except Exception:
+        try:
+            return str(obj).encode('utf-8', errors='replace').decode('utf-8', errors='replace')
+        except Exception:
+            return "[Error al convertir a string]"
+
+# -------------------------------
 # Asegurar que la carpeta base del proyecto está en sys.path
 # -------------------------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -34,14 +46,14 @@ LOG_FILE = os.path.join(LOG_DIR, "proceso.log")
 logger.init_logger(LOG_FILE)
 
 # -------------------------------
-# Ruta principal (vista HTML)
+# Ruta principal
 # -------------------------------
 @app.route('/')
 def index():
     return render_template('index.html')
 
 # -------------------------------
-# Ruta para iniciar el procesamiento OCR
+# Ruta para iniciar OCR
 # -------------------------------
 @app.route('/start', methods=['POST'])
 def start_processing():
@@ -73,34 +85,27 @@ def start_processing():
                     os.makedirs(temp_output_dir, exist_ok=True)
 
                     logger.log_info(f"Iniciando OCR para: {file}")
-                    ocr_processor.ocr_pdf_to_text(pdf_path, temp_output_dir)
-
-                    # Verificar si el OCR generó algún archivo de texto
-                    has_text = any(
-                        fname.endswith(".txt") and os.path.getsize(os.path.join(temp_output_dir, fname)) > 0
-                        for fname in os.listdir(temp_output_dir)
+                    output_searchable_pdf = os.path.join(temp_output_dir, f"{base_name}_searchable.pdf")
+                    result = ocr_processor.ocr_pdf_to_text(
+                        pdf_path,
+                        temp_output_dir,
+                        output_searchable_pdf=output_searchable_pdf
                     )
 
-                    if not has_text:
+                    if not result["success"]:
                         logger.log_error(f"OCR fallido o sin texto: {file}")
                         if os.path.exists(temp_output_dir) and not os.listdir(temp_output_dir):
                             os.rmdir(temp_output_dir)
                         continue
 
-                    # Dividir PDF original (opcional)
-                    pdf_splitter.split_pdf_by_page(pdf_path, temp_output_dir)
-
-                    # Insertar metadatos en los PDFs generados por OCR
-                    for fname in os.listdir(temp_output_dir):
-                        if fname.endswith(".pdf") and "_pagina_" in fname:
-                            metadata_writer.insert_metadata_to_pdf(
-                                os.path.join(temp_output_dir, fname),
-                                {
-                                    "Title": file,
-                                    "Producer": "OCR App",
-                                    "CustomID": f"{int(time.time())}"
-                                }
-                            )
+                    metadata_writer.insert_metadata_to_pdf(
+                        output_searchable_pdf,
+                        {
+                            "Title": file,
+                            "Producer": "OCR App",
+                            "CustomID": f"{int(time.time())}"
+                        }
+                    )
 
                     processed_files += 1
                     logger.log_info(f"Procesado correctamente: {file}")
@@ -117,7 +122,7 @@ def start_processing():
         return f"Error: {safe_str(e)}"
 
 # -------------------------------
-# Ruta para ver los logs
+# Ruta de logs
 # -------------------------------
 @app.route('/logs')
 def get_logs():
@@ -128,15 +133,3 @@ def get_logs():
 # -------------------------------
 if __name__ == '__main__':
     app.run(debug=True)
-
-# -------------------------------
-# Utilidad para evitar errores de codificación
-# -------------------------------
-def safe_str(obj):
-    try:
-        return str(obj)
-    except Exception:
-        try:
-            return str(obj).encode('utf-8', errors='replace').decode('utf-8', errors='replace')
-        except Exception:
-            return "[Error al convertir a string]"

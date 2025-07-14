@@ -4,9 +4,10 @@ from pdf2image import convert_from_path
 from PIL import Image, ImageEnhance, ImageFilter
 import cv2
 import numpy as np
-from fpdf import FPDF
 import easyocr
+from fpdf import FPDF
 from ocr_utils.logger import log_info, log_error
+from ocr_utils.ocr_pdf_overlay import create_searchable_pdf
 import re
 
 # -------------------------------
@@ -14,7 +15,7 @@ import re
 # -------------------------------
 DEBUG = True
 USE_PREPROCESSING = True
-OCR_DPI = 400  # Mayor resolución para mejorar OCR
+OCR_DPI = 400  # Alta resolución para mejor OCR
 
 # -------------------------------
 # Inicializar lector EasyOCR
@@ -36,26 +37,29 @@ def convert_pdf_to_images(pdf_path, dpi=OCR_DPI):
         return []
 
 # -------------------------------
-# Preprocesamiento avanzado de imagen
+# Guarda PDF con imagen + texto
+# -------------------------------
+def save_searchable_pdf(pil_image, ocr_text, output_path):
+    try:
+        create_searchable_pdf(pil_image, ocr_text, output_path)
+        log_info(f"PDF searchable guardado en: {output_path}")
+    except Exception as e:
+        log_error(f"Error creando PDF searchable: {safe_str(e)}")
+
+# -------------------------------
+# Preprocesamiento de imagen
 # -------------------------------
 def preprocess_image(pil_image):
     try:
         img = pil_image.convert('L')  # Escala de grises
-
-        # Aumentar contraste
         enhancer = ImageEnhance.Contrast(img)
         img = enhancer.enhance(2.0)
-
-        # Filtro para mejorar bordes
         img = img.filter(ImageFilter.MedianFilter(size=3))
 
         img_np = np.array(img)
-
-        # Umbral binario (Otsu) y limpieza de ruido
         _, img_bin = cv2.threshold(img_np, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
         img_bin = cv2.medianBlur(img_bin, 3)
 
-        # Corrección de inclinación (deskew)
         coords = np.column_stack(np.where(img_bin < 255))
         if coords.any():
             angle = cv2.minAreaRect(coords)[-1]
@@ -89,11 +93,8 @@ def perform_ocr(image):
         if DEBUG: print(msg)
         return ""
 
-
-
-
 # -------------------------------
-# Guarda texto como .txt
+# Guarda como .txt
 # -------------------------------
 def save_ocr_text(text, output_path):
     try:
@@ -106,7 +107,7 @@ def save_ocr_text(text, output_path):
         if DEBUG: print(msg)
 
 # -------------------------------
-# Guarda texto como PDF
+# Guarda como PDF de solo texto
 # -------------------------------
 def save_text_as_pdf(text, output_path):
     try:
@@ -116,7 +117,6 @@ def save_text_as_pdf(text, output_path):
         pdf.set_auto_page_break(auto=True, margin=15)
 
         clean_text = text.encode('latin-1', errors='replace').decode('latin-1', errors='replace')
-
         for line in clean_text.split('\n'):
             pdf.multi_cell(0, 10, line)
 
@@ -127,20 +127,15 @@ def save_text_as_pdf(text, output_path):
         log_error(msg)
         if DEBUG: print(msg)
 
-import re
-
+# -------------------------------
+# Validación de texto OCR
+# -------------------------------
 def is_valid_text(text):
-    # Filtrar caracteres no imprimibles
     text = re.sub(r'[^\x20-\x7EñÑáéíóúÁÉÍÓÚüÜ]', '', text)
-
-    # Eliminar espacios dobles
     cleaned = re.sub(r'\s+', ' ', text).strip()
-
-    # Demasiado corto
     if len(cleaned) < 20:
         return False
 
-    # Evaluar contenido alfanumérico
     letters = len(re.findall(r'[a-zA-ZáéíóúñÑÁÉÍÓÚÜü]', cleaned))
     digits = len(re.findall(r'\d', cleaned))
     symbols = len(re.findall(r'[^a-zA-Z0-9\s]', cleaned))
@@ -149,26 +144,20 @@ def is_valid_text(text):
     if total_chars == 0:
         return False
 
-    # Criterios de calidad
     symbol_ratio = symbols / total_chars
     letter_ratio = letters / total_chars
 
-    if symbol_ratio > 0.5:  # Demasiados símbolos
-        return False
-    if letter_ratio < 0.4:  # Muy pocas letras
-        return False
-
-    # Si pasa los filtros, el texto es considerado válido
-    return True
+    return symbol_ratio <= 0.5 and letter_ratio >= 0.4
 
 # -------------------------------
 # Flujo principal: OCR PDF completo
 # -------------------------------
-def ocr_pdf_to_text(pdf_path, output_folder):
+def ocr_pdf_to_text(pdf_path, output_folder, output_searchable_pdf=None):
     log_info(f"OCR del archivo: {pdf_path}")
     images = convert_pdf_to_images(pdf_path)
     base_name = os.path.splitext(os.path.basename(pdf_path))[0]
     total_text = ""
+    image_text_pairs = []
 
     for idx, image in enumerate(images):
         page_number = idx + 1
@@ -179,18 +168,35 @@ def ocr_pdf_to_text(pdf_path, output_folder):
             output_txt = os.path.join(output_folder, f"{base_name}_pagina_{page_number}.txt")
             save_ocr_text(text, output_txt)
 
-            output_pdf = os.path.join(output_folder, f"{base_name}_pagina_{page_number}_ocr.pdf")
+            output_pdf = os.path.join(output_folder, f"{base_name}_pagina_{page_number}_texto.pdf")
             save_text_as_pdf(text, output_pdf)
 
+            output_searchable = os.path.join(output_folder, f"{base_name}_pagina_{page_number}_searchable.pdf")
+            save_searchable_pdf(image, text, output_searchable)
+
             total_text += text + "\n\n"
+            image_text_pairs.append((image, text))  # para PDF combinado
         else:
             log_error(f"OCR fallido o sin texto útil en página {page_number} de {base_name}")
 
     if not total_text.strip():
         log_error(f"OCR fallido o sin texto: {base_name}.pdf")
+        return {"success": False, "message": "Sin texto válido"}
+
+    # Crear PDF searchable combinado si se solicita
+    if output_searchable_pdf and image_text_pairs:
+        try:
+            from ocr_utils.ocr_pdf_overlay import create_combined_searchable_pdf
+            create_combined_searchable_pdf(image_text_pairs, output_searchable_pdf)
+            log_info(f"PDF searchable combinado guardado: {output_searchable_pdf}")
+        except Exception as e:
+            log_error(f"Error creando PDF searchable combinado: {safe_str(e)}")
+
+    return {"success": True}
+
 
 # -------------------------------
-# Utilidad segura para logs
+# Utilidad para evitar errores de codificación
 # -------------------------------
 def safe_str(obj):
     try:

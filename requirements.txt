@@ -6,4 +6,5 @@ opencv-python
 numpy
 fpdf
 pikepdf
-
+easyocr
+PyMuPDF
