@@ -49,15 +49,15 @@ def start_processing():
     output_folder = request.form.get('output_folder')
 
     if not input_folder or not output_folder:
-        logger.log_error("❌ Rutas no válidas.")
+        logger.log_error("Rutas no válidas.")
         return "Error: Rutas no válidas."
 
     input_path = os.path.abspath(input_folder)
     output_path = os.path.abspath(output_folder)
 
     start_time = time.time()
-    logger.log_info(f"🚀 Iniciando procesamiento OCR en: {input_path}")
-    logger.log_info(f"💾 Guardando resultados en: {output_path}")
+    logger.log_info(f"Iniciando procesamiento OCR en: {input_path}")
+    logger.log_info(f"Guardando resultados en: {output_path}")
 
     try:
         os.makedirs(output_path, exist_ok=True)
@@ -69,11 +69,10 @@ def start_processing():
                 base_name = os.path.splitext(file)[0]
 
                 try:
-                    # OCR primero (crear subcarpeta solo si es exitoso)
                     temp_output_dir = os.path.join(output_path, base_name)
                     os.makedirs(temp_output_dir, exist_ok=True)
 
-                    logger.log_info(f"🔁 Iniciando OCR para: {file}")
+                    logger.log_info(f"Iniciando OCR para: {file}")
                     ocr_processor.ocr_pdf_to_text(pdf_path, temp_output_dir)
 
                     # Verificar si el OCR generó algún archivo de texto
@@ -83,33 +82,39 @@ def start_processing():
                     )
 
                     if not has_text:
-                        logger.log_error(f"⚠️ OCR fallido o sin texto: {file}")
-                        # Elimina carpeta vacía
+                        logger.log_error(f"OCR fallido o sin texto: {file}")
                         if os.path.exists(temp_output_dir) and not os.listdir(temp_output_dir):
                             os.rmdir(temp_output_dir)
-                        continue  # Saltar este archivo
+                        continue
 
-                    # Si OCR fue exitoso, continuar con los otros pasos
+                    # Dividir PDF original (opcional)
                     pdf_splitter.split_pdf_by_page(pdf_path, temp_output_dir)
-                    metadata_writer.insert_metadata_to_pdf(pdf_path, {
-                        "Title": file,
-                        "Producer": "OCR App",
-                        "CustomID": f"{int(time.time())}"
-                    })
+
+                    # Insertar metadatos en los PDFs generados por OCR
+                    for fname in os.listdir(temp_output_dir):
+                        if fname.endswith(".pdf") and "_pagina_" in fname:
+                            metadata_writer.insert_metadata_to_pdf(
+                                os.path.join(temp_output_dir, fname),
+                                {
+                                    "Title": file,
+                                    "Producer": "OCR App",
+                                    "CustomID": f"{int(time.time())}"
+                                }
+                            )
 
                     processed_files += 1
-                    logger.log_info(f"✅ Procesado correctamente: {file}")
+                    logger.log_info(f"Procesado correctamente: {file}")
 
                 except Exception as e:
-                    logger.log_error(f"❌ Error procesando {file}: {str(e)}")
+                    logger.log_error(f"Error procesando {file}: {safe_str(e)}")
 
         end_time = time.time()
         logger.log_benchmark(start_time, end_time, processed_files)
         return redirect('/')
 
     except Exception as e:
-        logger.log_error(f"❌ Error general: {str(e)}")
-        return f"Error: {str(e)}"
+        logger.log_error(f"Error general: {safe_str(e)}")
+        return f"Error: {safe_str(e)}"
 
 # -------------------------------
 # Ruta para ver los logs
@@ -123,3 +128,15 @@ def get_logs():
 # -------------------------------
 if __name__ == '__main__':
     app.run(debug=True)
+
+# -------------------------------
+# Utilidad para evitar errores de codificación
+# -------------------------------
+def safe_str(obj):
+    try:
+        return str(obj)
+    except Exception:
+        try:
+            return str(obj).encode('utf-8', errors='replace').decode('utf-8', errors='replace')
+        except Exception:
+            return "[Error al convertir a string]"

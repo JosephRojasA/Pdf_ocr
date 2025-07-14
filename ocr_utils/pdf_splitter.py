@@ -20,9 +20,9 @@ def split_pdf_by_page(pdf_path, output_folder):
             with open(output_path, "wb") as f:
                 writer.write(f)
 
-            log_info(f"📄 Página {i+1} guardada como: {output_filename}")
+            log_info(f" Página {i+1} guardada como: {safe_str(output_filename)}")
     except Exception as e:
-        log_error(f"❌ Error al dividir PDF {pdf_path}: {str(e)}")
+        log_error(f" Error al dividir PDF {safe_str(pdf_path)}: {safe_str(e)}")
 
 
 # -------------------------------
@@ -45,9 +45,9 @@ def split_pdf_by_ranges(pdf_path, ranges, output_folder):
             with open(output_path, "wb") as f:
                 writer.write(f)
 
-            log_info(f"📄 Rango {start}-{end} guardado como: {output_filename}")
+            log_info(f" Rango {start}-{end} guardado como: {safe_str(output_filename)}")
     except Exception as e:
-        log_error(f"❌ Error al dividir por rangos en {pdf_path}: {str(e)}")
+        log_error(f" Error al dividir por rangos en {safe_str(pdf_path)}: {safe_str(e)}")
 
 
 # -------------------------------
@@ -62,8 +62,21 @@ def rename_split_pdfs(output_folder, metadata_list):
 
             if os.path.exists(old_file):
                 os.rename(old_file, new_file)
-                log_info(f"🔤 Renombrado: {meta['filename']} → {meta['new_name']}")
+                log_info(f" Renombrado: {safe_str(meta['filename'])} → {safe_str(meta['new_name'])}")
             else:
-                log_error(f"⚠️ Archivo no encontrado para renombrar: {meta['filename']}")
+                log_error(f" Archivo no encontrado para renombrar: {safe_str(meta['filename'])}")
     except Exception as e:
-        log_error(f"❌ Error al renombrar archivos: {str(e)}")
+        log_error(f" Error al renombrar archivos: {safe_str(e)}")
+
+
+# -------------------------------
+# Limpia cadenas para evitar errores de codificación
+# -------------------------------
+def safe_str(obj):
+    try:
+        return str(obj)
+    except Exception:
+        try:
+            return str(obj).encode('utf-8', errors='replace').decode('utf-8', errors='replace')
+        except Exception:
+            return "[Error al convertir a string]"
